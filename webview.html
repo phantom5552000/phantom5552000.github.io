@@ -1,0 +1,44 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script>
+    var NativeBridge = {
+      send: function(methodName, args) {
+        if (this.isIOS()) {
+            window.webkit.messageHandlers[methodName].postMessage(args);
+        } else if (this.isAndroid()) {
+            MyApp[methodName](args);
+        } else {
+            console.log('browser access.');
+        }
+      },
+      isIOS: function() {
+        return window.navigator.userAgent.indexOf('Sample-iOS-App') !== -1;
+      },
+      isAndroid: function() {
+        return window.navigator.userAgent.indexOf('Sample-Android-App') !== -1;
+      }
+    };
+    window.onload = function() {
+      document.getElementById('ua').innerText = window.navigator.userAgent;
+    };
+  </script>
+</head>
+<body>
+  UA: <span id="ua"></span>
+  <br><br>
+  <span onclick="MyApp.sendMessage('test message.')">Android タップイベント通知</span>
+  <br><br>
+  <span onclick="window.webkit.messageHandlers.sendMessage.postMessage('test message.')">iOS タップイベント通知</span>
+  <br><br>
+  <span onclick="NativeBridge.send('sendMessage', 'test message.')">UA判定 タップイベント通知</span>
+  <br><br>
+  <a href="https://noboru-i.github.io/sample-html/">Top</a>
+  <br><br>
+  <a href="https://noboru-i.github.io/sample-html/cookie.html">Cookie確認</a>
+  <br><br>
+  <a href="https://www.google.co.jp/">Google</a>
+  <br><br>
+  <a href="https://www.google.co.jp/" target="_blank">Google with target="_blank"</a>
+</body>
+</html>
